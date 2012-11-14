@@ -26,6 +26,6 @@ typedef struct {
     BATTLESHIP = 0x40,
     CARRIER = 0x80,
   } type;
-} ship;
+} Ship;
 
 #endif
