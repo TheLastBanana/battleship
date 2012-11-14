@@ -8,8 +8,8 @@
 #define CARRIER_HEALTH    5
 
 typedef struct {
-  uint8_t x;
-  uint8_t y;
+  int8_t x;
+  int8_t y;
   uint8_t health;
 
   enum DIRECTIONS {
@@ -28,4 +28,4 @@ typedef struct {
   } type;
 } ship;
 
-#endif SHIP_H
+#endif
