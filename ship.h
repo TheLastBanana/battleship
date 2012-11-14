@@ -3,8 +3,8 @@
 
 #define PATROL_HEALTH     2
 #define SUBMARINE_HEALTH  3
+#define DESTROYER_HEALTH  3
 #define BATTLESHIP_HEALTH 4
-#define DESTROYER_HEALTH  4
 #define CARRIER_HEALTH    5
 
 typedef struct {
@@ -22,8 +22,8 @@ typedef struct {
   enum TYPES {
     PATROL = 0x08,
     SUBMARINE = 0x10,
-    BATTLESHIP = 0x20,
-    DESTROYER = 0x40,
+    DESTROYER = 0x20,
+    BATTLESHIP = 0x40,
     CARRIER = 0x80,
   } type;
 } ship;
