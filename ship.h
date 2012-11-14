@@ -10,12 +10,15 @@
 typedef struct {
   uint8_t x;
   uint8_t y;
+  uint8_t health;
+
   enum DIRECTIONS {
     RIGHT = 0,
     UP = 1,
     LEFT = 2,
     DOWN = 3
   } direction;
+
   enum TYPES {
     PATROL = 0x08,
     SUBMARINE = 0x10,
@@ -23,7 +26,6 @@ typedef struct {
     DESTROYER = 0x40,
     CARRIER = 0x80,
   } type;
-  uint8_t health;
 } ship;
 
 #endif SHIP_H
