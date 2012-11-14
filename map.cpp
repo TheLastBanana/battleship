@@ -9,6 +9,7 @@
  * facing right, and each ship type.
  * @param map Pointer to the map to fill.
  * @param initialState The state to initialize each square to.
+ * @returns Fully initialized map.
  */
 Map initMap(Map* curMap, uint8_t initialState) {
   //Patrol
@@ -52,11 +53,21 @@ Map initMap(Map* curMap, uint8_t initialState) {
   }
 }
 
+/**
+ * Gets the current state from a square.
+ * @param block The square to retrieve the state from.
+ * @returns The current state of the square.
+ */
 
 uint8_t getState(uint8_t block) {
   return block & 0x07;//0x07 = 00000111
 }
 
+/**
+ * Gets the current Ship from a square.
+ * @param block The square to retrieve the ship from.
+ * @returns The current ship in the square or 0 if there's no ship.
+ */
 uint8_t getShipType(uint8_t block) {
   return block & 0xF8;//0xF8 = 11111000
 }
