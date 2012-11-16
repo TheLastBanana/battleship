@@ -131,7 +131,7 @@ void renderMap(Map *map) {
 
   for (uint8_t x = 0; x < MAP_SIZE; x++) {
     for (uint8_t y = 0; y < MAP_SIZE; y++) {
-      square = map->squares[y * MAP_SIZE + x];
+      square = map->squares[indexFromPos(x, y)];
       color = getStateColor(getState(square));
       tft.fillRect(GRID_X_OFFSET + x * GRID_WIDTH,
 		   GRID_Y_OFFSET + y * GRID_HEIGHT,

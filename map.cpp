@@ -5,25 +5,25 @@
  * Fills ships in order Patrol>Sub>Destroyer>Battleship>Carrier
  * with coordinates (-1, -1), the default ship health for each,
  * facing right, and each ship type.
- * @param	map	Pointer to the map to fill.
- * @param	initialState	The state to initialize each square to.
- * @returns		Fully initialized map.
+ * @param map Pointer to the map to fill.
+ * @param initialState The state to initialize each square to.
+ * @returns Fully initialized map.
  */
 Map initMap(Map* curMap, uint8_t initialState) {
   //Patrol
   initShip(&curMap->ships[0], Ship::PATROL);
 
   //Submarine
-  initShip(&curMap->ships[0], Ship::SUBMARINE);
+  initShip(&curMap->ships[1], Ship::SUBMARINE);
 
   //Destroyer
-  initShip(&curMap->ships[0], Ship::DESTROYER);
+  initShip(&curMap->ships[2], Ship::DESTROYER);
 
   //Battleship
-  initShip(&curMap->ships[0], Ship::BATTLESHIP);
+  initShip(&curMap->ships[3], Ship::BATTLESHIP);
 
   //Carrier
-  initShip(&curMap->ships[0], Ship::CARRIER);
+  initShip(&curMap->ships[4], Ship::CARRIER);
   
   for(uint8_t i = 0; i < MAP_SIZE * MAP_SIZE; i++) {
     curMap->squares[i] = initialState;
@@ -32,8 +32,8 @@ Map initMap(Map* curMap, uint8_t initialState) {
 
 /**
  * Gets the current state from a square.
- * @param	block	The square to retrieve the state from.
- * @returns		The current state of the square.
+ * @param block The square to retrieve the state from.
+ * @returns The current state of the square.
  */
 
 Map::STATE getState(uint8_t block) {
@@ -42,9 +42,29 @@ Map::STATE getState(uint8_t block) {
 
 /**
  * Gets the current Ship from a square.
- * @param	block	The square to retrieve the ship from.
- * @returns 		The current ship in the square or 0 if there's no ship.
+ * @param block The square to retrieve the ship from.
+ * @returns The current ship in the square or 0 if there's no ship.
  */
 Ship::TYPES getShipType(uint8_t block) {
   return (Ship::TYPES)(block & 0xF8);//0xF8 = 11111000
+}
+
+/*
+ * Gets the index in squares from the given position.
+ * @param	x	The x-position.
+ * @param	y	The y-position.
+ */
+uint8_t indexFromPos(uint8_t x, uint8_t y) {
+  return x + y * MAP_SIZE;
+}
+
+/*
+ * Gets the position from a given index.
+ * @param	index	The index in question.
+ * @param	x	A pointer to the x-position.
+ * @param	y	A pointer to the y-position.
+ */
+void posFromIndex(uint8_t index, uint8_t *x, uint8_t *y) {
+  *x = index % MAP_SIZE;
+  *y = index / MAP_SIZE;
 }

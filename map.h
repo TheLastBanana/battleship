@@ -22,5 +22,7 @@ typedef struct {
 Map initMap(Map* map, uint8_t initialState);
 Map::STATE getState(uint8_t block);
 Ship::TYPES getShipType(uint8_t block);
+uint8_t indexFromPos(uint8_t x, uint8_t y);
+void posFromIndex(uint8_t index, uint8_t *x, uint8_t *y);
 
 #endif
