@@ -1,6 +1,8 @@
 #ifndef SHIP_H
 #define SHIP_H
 
+#include "Arduino.h"
+
 #define PATROL_HEALTH     2
 #define SUBMARINE_HEALTH  3
 #define DESTROYER_HEALTH  3
@@ -27,5 +29,7 @@ typedef struct {
     CARRIER = 0x80,
   } type;
 } Ship;
+
+uint8_t getTypeHealth(Ship::TYPES type);
 
 #endif
