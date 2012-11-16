@@ -32,7 +32,7 @@ typedef struct {
 } Ship;
 
 uint8_t getTypeHealth(Ship::TYPES type);
-
+String getTypeName(Ship::TYPES type);
 void initShip(Ship* ship, Ship::TYPES type);
 
 #endif

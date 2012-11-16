@@ -27,6 +27,32 @@ uint8_t getTypeHealth(Ship::TYPES type) {
 }
 
 /*
+ * Returns the name for a given ship type.
+ * @param	type		The ship's type.
+ */
+String getTypeName(Ship::TYPES type) {
+  switch (type) {
+  case Ship::PATROL:
+    return "patrol boat";
+
+  case Ship::SUBMARINE:
+    return "submarine";
+
+  case Ship::DESTROYER:
+    return "destroyer";
+
+  case Ship::BATTLESHIP:
+    return "battleship";
+
+  case Ship::CARRIER:
+    return "carrier";
+
+  default:
+    return "unknown ship";
+  }
+}
+
+/*
  * Initializes a ship to default based on its type.
  * @param	ship		A pointer to the ship struct.
  * @param	type		The ship's type.
