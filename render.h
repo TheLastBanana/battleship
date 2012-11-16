@@ -27,4 +27,6 @@ void renderGrid(uint8_t offsetX, uint8_t offsetY, uint8_t startX, uint8_t startY
 
 void renderMap(Map *map);
 
+void renderCursor(uint8_t x, uint8_t y);
+
 #endif

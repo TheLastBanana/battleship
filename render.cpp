@@ -147,3 +147,15 @@ void renderMap(Map *map) {
 
   renderGrid(GRID_X_OFFSET, GRID_Y_OFFSET, 0, 0, 10, 10, ST7735_WHITE);
 }
+
+/*
+ * Renders the cursor.
+ * @param	x	The cursor's x position, in grid coordinates.
+ * @param	y	The cursor's y position, in grid coordinates.
+ */
+ void renderCursor(uint8_t x, uint8_t y) {
+   x = x * GRID_WIDTH + 4;
+   y = y * GRID_WIDTH + 4;
+   tft.drawLine(x + 1, y + 1, x + GRID_WIDTH - 1, y + GRID_HEIGHT - 1, ST7735_RED);
+   tft.drawLine(x + 1, y + GRID_HEIGHT - 1, x + GRID_WIDTH - 1, y + 1, ST7735_RED);
+ }
