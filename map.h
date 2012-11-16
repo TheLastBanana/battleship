@@ -11,10 +11,10 @@ typedef struct {
   uint8_t squares[MAP_SIZE * MAP_SIZE];
 
   enum STATE {
-    UNKNOWN = 0,
-    HIT = 1,
-    MISS = 2,
-    NONE = 4
+    UNKNOWN = 0x00,
+    HIT = 0x01,
+    MISS = 0x02,
+    NONE = 0x04
   };
 } Map;
 
