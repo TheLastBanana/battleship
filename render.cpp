@@ -55,11 +55,11 @@ uint16_t getStateColor(Map::STATE s) {
     break;
 
   case Map::NONE:
-    return ST7735_BLACK;
+    return ST7735_BLUE;
     break;
 
   default:
-    return ST7735_BLACK;
+    return tft.Color565(255, 0, 255);
     break;
   }
 }
