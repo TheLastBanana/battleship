@@ -19,6 +19,8 @@ void initRender();
 
 void renderGrid(uint8_t offsetX, uint8_t offsetY, uint8_t startX, uint8_t startY, uint8_t width, uint8_t height, uint16_t color);
 
+uint16_t getStateColor(Map::STATE s);
+
 void renderMap(Map *map);
 
 #endif
