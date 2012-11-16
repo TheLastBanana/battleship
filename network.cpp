@@ -4,8 +4,8 @@
 
 /**
  * Sends an (x,y) position to the opposing arduino over Serial1.
- * @param x The x position.
- * @param y The y position.
+ * @param	x	The x position.
+ * @param	y	The y position.
  */
 void sendPosition(int8_t x, int8_t y) {
   Serial.write(x);
@@ -17,8 +17,8 @@ void sendPosition(int8_t x, int8_t y) {
  * Reads an (x,y) position from the opposing arduino over Serial1.
  * Will wait until three bytes are waiting in the buffer before proceeding with the read.
  * If the third byte read is not EOT then the position will default to offscreen.
- * @param x Pointer to where the x position should be stored.
- * @param y Pointer to where the y position should be stored.
+ * @param	x	Pointer to where the x position should be stored.
+ * @param	y	Pointer to where the y position should be stored.
  */
 void getPosition(int8_t *x, int8_t *y) {
   Serial.println("Beginning wait for position");//DEBUG
@@ -43,7 +43,7 @@ void getPosition(int8_t *x, int8_t *y) {
 /**
  * Listens to Serial1 for a specified char, returning only after that char is received.
  * Will hard loop with no chance of escape until the specified char is received.
- * @param c The char to listen for.
+ * @param	c	The char to listen for.
  */
 void listenUntil(char c) {
   while( 1 ) {
@@ -64,8 +64,8 @@ void listenUntil(char c) {
 /**
  * Sends a response to the shot position that includes whether or not it was hit
  * as well as the type of shit that was hit in the even that it was sunk.
- * @param hit Boolean that is true if there was a hit and false otherwise.
- * @param type uint8 containing the type of ship hit if and only if the ship was sunk.
+ * @param	hit	Boolean that is true if there was a hit and false otherwise.
+ * @param	type	uint8 containing the type of ship hit if and only if the ship was sunk.
  */
 void sendResponse(bool hit, uint8_t type) {
   Serial1.write(hit);
