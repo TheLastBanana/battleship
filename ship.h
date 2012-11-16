@@ -22,6 +22,7 @@ typedef struct {
   } direction;
 
   enum TYPES {
+    NONE = 0x00,
     PATROL = 0x08,
     SUBMARINE = 0x10,
     DESTROYER = 0x20,
