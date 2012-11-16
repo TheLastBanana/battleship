@@ -1,3 +1,5 @@
+#include "map.h"
+
 /**
  * Initializes a map struct with default values.
  * Fills ships in order Patrol>Sub>Destroyer>Battleship>Carrier
