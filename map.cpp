@@ -1,7 +1,3 @@
-#include "Arduino.h"
-#include <map.h>
-#include <ship.h>
-
 /**
  * Initializes a map struct with default values.
  * Fills ships in order Patrol>Sub>Destroyer>Battleship>Carrier
