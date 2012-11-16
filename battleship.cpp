@@ -3,10 +3,12 @@
 #include "map.h"
 
 void setup() {
+  Serial.begin(9600);
+  
   initRender();
 
   Map testMap;
-  initMap(&testMap, Map::UNKNOWN);
+  initMap(&testMap, Map::NONE);
   renderMap(&testMap);
 }
 
