@@ -59,8 +59,8 @@ Map initMap(Map* curMap, uint8_t initialState) {
  * @returns The current state of the square.
  */
 
-uint8_t getState(uint8_t block) {
-  return block & 0x07;//0x07 = 00000111
+Map::STATE getState(uint8_t block) {
+  return (Map::STATE)(block & 0x07);//0x07 = 00000111
 }
 
 /**
@@ -68,6 +68,6 @@ uint8_t getState(uint8_t block) {
  * @param block The square to retrieve the ship from.
  * @returns The current ship in the square or 0 if there's no ship.
  */
-uint8_t getShipType(uint8_t block) {
-  return block & 0xF8;//0xF8 = 11111000
+Ship::TYPES getShipType(uint8_t block) {
+  return (Ship::TYPES)(block & 0xF8);//0xF8 = 11111000
 }
