@@ -2,6 +2,7 @@
 
 /*
  * Returns the default health for a given ship type.
+ * @param	type		The ship's type.
  */
 uint8_t getTypeHealth(Ship::TYPES type) {
   switch (type) {
@@ -23,4 +24,17 @@ uint8_t getTypeHealth(Ship::TYPES type) {
   default:
     return 0;
   }
+}
+
+/*
+ * Initializes a ship to default based on its type.
+ * @param	ship		A pointer to the ship struct.
+ * @param	type		The ship's type.
+ */
+void initShip(Ship* ship, Ship::TYPES type) {
+  ship->x = -1;
+  ship->y = -1;
+  ship->direction = Ship::RIGHT;
+  ship->type = type;
+  ship->health = getTypeHealth(type);
 }
