@@ -4,7 +4,7 @@
 #include "Arduino.h"
 
 void startPlacement();
-void updatePlacement();
+bool updatePlacement();
 void renderPlacementInfo();
 
 #endif
