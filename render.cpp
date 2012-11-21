@@ -2,7 +2,7 @@
 
 Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_RST);
 
-/*
+/**
  * Initializes rendering.
  */
 void initRender() {
@@ -10,7 +10,52 @@ void initRender() {
   tft.fillRect(0, 0, 128, 160, 0);
 }
 
-/*
+/**
+ * Gets the red component of a 5-6-5 packed color.
+ * @param	color		The color.
+ */
+uint8_t Color565r(uint16_t color) {
+  return (color & 0xF800) >> 8;
+}
+
+/**
+ * Gets the green component of a 5-6-5 packed color.
+ * @param	color		The color.
+ */
+uint8_t Color565g(uint16_t color) {
+  return (color & 0x7E0) >> 3;
+}
+
+/**
+ * Gets the blue component of a 5-6-5 packed color.
+ * @param	color		The color.
+ */
+uint8_t Color565b(uint16_t color) {
+  return (color & 0x1F) << 3;
+}
+
+/**
+ * Blends two 5-6-5 packed colors together (multiply).
+ * @param	colorA		The first color.
+ * @param	colorB		The second color.
+ */
+
+uint16_t blendColor(uint16_t colorA, uint16_t colorB) {
+  float ra = Color565r(colorA) / 248.f;
+  float ga = Color565g(colorA) / 252.f;
+  float ba = Color565b(colorA) / 248.f;
+  float rb = Color565r(colorB) / 248.f;
+  float gb = Color565g(colorB) / 252.f;
+  float bb = Color565b(colorB) / 248.f;
+
+  uint8_t r = ra * rb * 255;
+  uint8_t g = ga * gb * 255;
+  uint8_t b = ba * bb * 255;
+
+  return tft.Color565(r, g, b);
+}
+
+/**
  * Get the colour of a square based on its state.
  * @param	s	The state of the square.
  */
@@ -38,11 +83,11 @@ uint16_t getStateColor(Map::STATE s) {
   }
 }
 
-/*
+/**
  * Renders a ship. Doesn't render it if x or y is -1.
  * @param	ship		The ship.
  */
-void renderShip(Ship *ship) {
+void renderShip(Ship *ship, uint16_t color) {
   // Get the start position and size of the ship.
   int8_t x = ship->x;
   int8_t y = ship->y;
@@ -82,6 +127,8 @@ void renderShip(Ship *ship) {
     break;
   }
 
+  uint16_t blendedColor = blendColor(tft.Color565(128, 128, 128), color);
+
   // Increment i by offset, then draw the ship at the resulting position.
   while (count < size) {
     if (x < 0 || x >= MAP_SIZE || y < 0 || y >= MAP_SIZE) continue;
@@ -89,13 +136,13 @@ void renderShip(Ship *ship) {
     tft.fillCircle(GRID_X_OFFSET + GRID_WIDTH * x + GRID_WIDTH * 0.5,
 		   GRID_Y_OFFSET + GRID_HEIGHT * y + GRID_HEIGHT * 0.5,
 		   GRID_WIDTH * 0.5 - 1,
-		   tft.Color565(64, 64, 64));
+		   blendedColor);
     *i += offset;
     count++;
   }
 }
 
-/*
+/**
  * Renders a grid.
  * @param	offsetX		The pixel x offset of the grid.
  * @param	offsetY		The pixel y offset of the grid.
@@ -121,7 +168,7 @@ void renderGrid(uint8_t offsetX, uint8_t offsetY, uint8_t startX, uint8_t startY
   }
 }
 
-/*
+/**
  * Renders a map.
  * @param	map	The map to render.
  */
@@ -148,7 +195,7 @@ void renderMap(Map *map) {
   renderGrid(GRID_X_OFFSET, GRID_Y_OFFSET, 0, 0, 10, 10, ST7735_WHITE);
 }
 
-/*
+/**
  * Renders the cursor.
  * @param	x	The cursor's x position, in grid coordinates.
  * @param	y	The cursor's y position, in grid coordinates.
