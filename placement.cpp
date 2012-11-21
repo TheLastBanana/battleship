@@ -15,11 +15,10 @@ bool nextShip();
  */
 void startPlacement() {
   initMap(&myMap, Map::NONE);
-  renderMap(&myMap);
   currentShip = 0;
   myMap.ships[currentShip].x = 0;
   myMap.ships[currentShip].y = 0;
-
+  renderMap(&myMap);
   renderPlacementInfo();
 }
 
@@ -29,22 +28,35 @@ void startPlacement() {
  */
 bool updatePlacement() {
   float vert = joyReadF(true), horiz = joyReadF(false);
-  if(vert < -joyThreshold) {
+  bool updated = false;
+  if(vert < -joyThreshold && myMap.ships[currentShip].y > 0) {
     myMap.ships[currentShip].y--;
+    updated = true;
   }
-  else if(vert > joyThreshold) {
+  else if(vert > joyThreshold && myMap.ships[currentShip].y < MAP_SIZE) {
     myMap.ships[currentShip].y++;
+    updated = true;
   }
   
-  if(horiz < -joyThreshold) {
+  if(horiz < -joyThreshold && myMap.ships[currentShip].x > 0) {
     myMap.ships[currentShip].x--;
+    updated = true;
   }
-  else if(vert > joyThreshold) {
+  else if(horiz > joyThreshold && myMap.ships[currentShip].x < MAP_SIZE) {
     myMap.ships[currentShip].x++;
+    updated = true;
   }
-
-  renderShip(&myMap.ships[currentShip]);
   
+  if(updated) {
+    renderMap(&myMap);
+  }
+  
+  /*if(buttonBPressed()) {
+    Serial.print("pushed: "); Serial.println(myMap.ships[currentShip].direction, DEC);
+    myMap.ships[currentShip].direction = (Ship::DIRECTIONS) ((myMap.ships[currentShip].direction) % 4);
+    Serial.println(myMap.ships[currentShip].direction, DEC);
+    }*/
+
   if(buttonAPressed()) {
     return nextShip();
   }
@@ -56,13 +68,56 @@ bool updatePlacement() {
  * @returns	bool true if reached NUM_SHIPS, false otherwise
  */
 bool nextShip() {
+    // Get the start position and size of the ship.
+  int8_t x = myMap.ships[currentShip].x;
+  int8_t y = myMap.ships[currentShip].y;
+
+  int8_t size = getTypeHealth(myMap.ships[currentShip].type);
+  
+  int8_t offset = 0;
+  int8_t* i;
+
+  switch (myMap.ships[currentShip].direction) {
+  case Ship::RIGHT:
+    i = &x;
+    offset = 1;
+    break;
+
+  case Ship::LEFT:
+    i = &x;
+    offset = -1;
+    break;
+
+  case Ship::DOWN:
+    i = &y;
+    offset = 1;
+    break;
+
+  case Ship::UP:
+    i = &y;
+    offset = -1;
+    break;
+
+  default:
+    i = &x;
+    offset = 0;
+    break;
+  }
+  for(uint8_t c = 0; c < size; c++) {
+    Serial.println(myMap.squares[indexFromPos(x, y)], BIN);
+    setShipType(&myMap.squares[indexFromPos(x, y)], myMap.ships[currentShip].type);
+    Serial.println(myMap.squares[indexFromPos(x, y)], BIN);
+    *i += offset;
+  }
+    
   if(currentShip++ > NUM_SHIPS) {
     return true;
   }
-  
+
   myMap.ships[currentShip].x = 0;
   myMap.ships[currentShip].y = 0;
   
+  renderMap(&myMap);
   renderPlacementInfo();
   return false;
 }
