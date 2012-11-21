@@ -41,12 +41,32 @@ Map::STATE getState(uint8_t block) {
 }
 
 /**
+ * Sets the current state to a square.
+ * @param 	block 	The square to set the state to.
+ * @param	state	The state to set.
+ * @returns 		The current state of the square.
+ */
+
+void setState(uint8_t* block, Map::STATE state) {
+  *block = (*block & 0xF8) | state;
+}
+
+/**
  * Gets the current Ship from a square.
- * @param block The square to retrieve the ship from.
- * @returns The current ship in the square or 0 if there's no ship.
+ * @param	block	The square to retrieve the ship from.
+ * @returns 		The current ship in the square or 0 if there's no ship.
  */
 Ship::TYPES getShipType(uint8_t block) {
   return (Ship::TYPES)(block & 0xF8);//0xF8 = 11111000
+}
+
+/**
+ * Sets the current Ship to a square.
+ * @param      block	The square to set the ship to.
+ * @returns   		The current ship in the square or 0 if there's no ship.
+ */
+void setShipType(uint8_t* block, Ship::TYPES type) {
+  *block = (*block & 0x07) | type;
 }
 
 /*
