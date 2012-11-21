@@ -4,6 +4,9 @@ int32_t vert0 = 512;
 int32_t horz0 = 512;
 const float joyThreshold = .2f;
 
+//private variables
+bool bPushed = false;
+
 void joyInit() {
   pinMode(SEL_A_PIN, INPUT);
   pinMode(SEL_B_PIN, INPUT);
@@ -29,8 +32,12 @@ bool buttonAPressed() {
 }
 
 bool buttonBPressed() {
-  if(digitalRead(SEL_B_PIN) == LOW) {
+  if(digitalRead(SEL_B_PIN) == LOW && !bPushed) {
+    bPushed = true;
     return true;
+  }
+  else if(digitalRead(SEL_B_PIN) != LOW && bPushed) {
+    bPushed = false;
   }
   return false;
 }
