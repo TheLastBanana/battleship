@@ -123,8 +123,11 @@ bool nextShip() {
     *i += offset;
   }
     
-  if(currentShip++ > NUM_SHIPS) {
+  if(currentShip >= NUM_SHIPS - 1) {
     return true;
+  }
+  else {
+    currentShip++;
   }
 
   myMap.ships[currentShip].x = 0;
