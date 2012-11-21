@@ -87,7 +87,7 @@ uint16_t getStateColor(Map::STATE s) {
  * Renders a ship. Doesn't render it if x or y is -1.
  * @param	ship		The ship.
  */
-void renderShip(Ship *ship, uint16_t color) {
+void renderShip(Ship *ship) {
   // Get the start position and size of the ship.
   int8_t x = ship->x;
   int8_t y = ship->y;
@@ -99,6 +99,9 @@ void renderShip(Ship *ship, uint16_t color) {
   int8_t offset = 0;
   int8_t* i;
   int8_t count = 0;
+
+  uint16_t color = tft.Color565(128, 128, 128);
+  if (!shipClear(&myMap, ship)) color = blendColor(color, ST7735_RED);
 
   switch (ship->direction) {
   case Ship::RIGHT:
@@ -127,8 +130,6 @@ void renderShip(Ship *ship, uint16_t color) {
     break;
   }
 
-  uint16_t blendedColor = blendColor(tft.Color565(128, 128, 128), color);
-
   // Increment i by offset, then draw the ship at the resulting position.
   while (count < size) {
     if (x < 0 || x >= MAP_SIZE || y < 0 || y >= MAP_SIZE) break;
@@ -136,7 +137,7 @@ void renderShip(Ship *ship, uint16_t color) {
     tft.fillCircle(GRID_X_OFFSET + GRID_WIDTH * x + GRID_WIDTH * 0.5,
 		   GRID_Y_OFFSET + GRID_HEIGHT * y + GRID_HEIGHT * 0.5,
 		   GRID_WIDTH * 0.5 - 1,
-		   blendedColor);
+		   color);
     *i += offset;
     count++;
   }

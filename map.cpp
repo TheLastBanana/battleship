@@ -88,3 +88,62 @@ void posFromIndex(uint8_t index, uint8_t *x, uint8_t *y) {
   *x = index % MAP_SIZE;
   *y = index / MAP_SIZE;
 }
+
+/**
+ * Checks that a ship does not overlap with anything else (or the edge of the screen).
+ * @param	map		The map.
+ * @param	ship		The ship.
+ * @param	Whether the area is clear of everything.
+ */
+bool shipClear(Map* map, Ship* ship) {
+  // Get the start position and size of the ship.
+  int8_t x = ship->x;
+  int8_t y = ship->y;
+
+  if (x == -1 || y == -1) return false;
+
+  int8_t size = getTypeHealth(ship->type);
+  
+  int8_t offset = 0;
+  int8_t* i;
+  int8_t count = 0;
+
+  switch (ship->direction) {
+  case Ship::RIGHT:
+    i = &x;
+    offset = 1;
+    break;
+
+  case Ship::LEFT:
+    i = &x;
+    offset = -1;
+    break;
+
+  case Ship::DOWN:
+    i = &y;
+    offset = 1;
+    break;
+
+  case Ship::UP:
+    i = &y;
+    offset = -1;
+    break;
+
+  default:
+    i = &x;
+    offset = 0;
+    break;
+  }
+
+  // Increment i by offset, then draw the ship at the resulting position.
+  while (count < size) {
+    if (x < 0 || x >= MAP_SIZE || y < 0 || y >= MAP_SIZE) return false;
+
+    Ship::TYPES type = getShipType(map->squares[indexFromPos(x, y)]);
+    if (type != Ship::NONE && type != ship->type) return false;
+    *i += offset;
+    count++;
+  }
+
+  return true;
+}
