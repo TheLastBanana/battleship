@@ -33,7 +33,7 @@ bool updatePlacement() {
     myMap.ships[currentShip].y--;
     updated = true;
   }
-  else if(vert > joyThreshold && myMap.ships[currentShip].y < MAP_SIZE) {
+  else if(vert > joyThreshold && myMap.ships[currentShip].y < MAP_SIZE - 1) {
     myMap.ships[currentShip].y++;
     updated = true;
   }
@@ -42,7 +42,7 @@ bool updatePlacement() {
     myMap.ships[currentShip].x--;
     updated = true;
   }
-  else if(horiz > joyThreshold && myMap.ships[currentShip].x < MAP_SIZE) {
+  else if(horiz > joyThreshold && myMap.ships[currentShip].x < MAP_SIZE - 1) {
     myMap.ships[currentShip].x++;
     updated = true;
   }
@@ -51,11 +51,26 @@ bool updatePlacement() {
     renderMap(&myMap);
   }
   
-  /*if(buttonBPressed()) {
-    Serial.print("pushed: "); Serial.println(myMap.ships[currentShip].direction, DEC);
-    myMap.ships[currentShip].direction = (Ship::DIRECTIONS) ((myMap.ships[currentShip].direction) % 4);
-    Serial.println(myMap.ships[currentShip].direction, DEC);
-    }*/
+  if(buttonBPressed()) {
+    switch(myMap.ships[currentShip].direction) {
+    case Ship::RIGHT:
+      myMap.ships[currentShip].direction = Ship::UP;
+      break;
+    case Ship::UP:
+      myMap.ships[currentShip].direction = Ship::LEFT;
+      break;
+    case Ship::LEFT:
+      myMap.ships[currentShip].direction = Ship::DOWN;
+      break;
+    case Ship::DOWN:
+      myMap.ships[currentShip].direction = Ship::RIGHT;
+      break;
+    default:
+      myMap.ships[currentShip].direction = Ship::RIGHT;
+      break;
+    }
+    renderMap(&myMap);
+  }
 
   if(buttonAPressed()) {
     return nextShip();
@@ -104,9 +119,7 @@ bool nextShip() {
     break;
   }
   for(uint8_t c = 0; c < size; c++) {
-    Serial.println(myMap.squares[indexFromPos(x, y)], BIN);
     setShipType(&myMap.squares[indexFromPos(x, y)], myMap.ships[currentShip].type);
-    Serial.println(myMap.squares[indexFromPos(x, y)], BIN);
     *i += offset;
   }
     
