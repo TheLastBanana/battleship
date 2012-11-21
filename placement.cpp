@@ -1,11 +1,14 @@
+#include <Arduino.h>
 #include "placement.h"
 #include "globals.h"
 #include "render.h"
 #include "ship.h"
+#include "joystick.h"
 
 uint8_t currentShip;
-uint8_t posX;
-uint8_t posY;
+
+//private functions
+bool nextShip();
 
 /*
  * Start the ship placement screen.
@@ -14,16 +17,54 @@ void startPlacement() {
   initMap(&myMap, Map::NONE);
   renderMap(&myMap);
   currentShip = 0;
+  myMap.ships[currentShip].x = 0;
+  myMap.ships[currentShip].y = 0;
 
   renderPlacementInfo();
 }
 
-
-/*
+/**
  * Update the ship placement screen.
+ * @returns	bool true if done placement, false otherwise
  */
-void updatePlacement() {
+bool updatePlacement() {
+  float vert = joyReadF(true), horiz = joyReadF(false);
+  if(vert < -joyThreshold) {
+    myMap.ships[currentShip].y--;
+  }
+  else if(vert > joyThreshold) {
+    myMap.ships[currentShip].y++;
+  }
   
+  if(horiz < -joyThreshold) {
+    myMap.ships[currentShip].x--;
+  }
+  else if(vert > joyThreshold) {
+    myMap.ships[currentShip].x++;
+  }
+
+  renderShip(&myMap.ships[currentShip]);
+  
+  if(buttonAPressed()) {
+    return nextShip();
+  }
+  return false;
+}
+
+/**
+ * Update which ship is currrently being placed
+ * @returns	bool true if reached NUM_SHIPS, false otherwise
+ */
+bool nextShip() {
+  if(currentShip++ > NUM_SHIPS) {
+    return true;
+  }
+  
+  myMap.ships[currentShip].x = 0;
+  myMap.ships[currentShip].y = 0;
+  
+  renderPlacementInfo();
+  return false;
 }
 
 /*

@@ -2,10 +2,13 @@
 
 int32_t vert0 = 512;
 int32_t horz0 = 512;
+const float joyThreshold = .2f;
 
 void joyInit() {
-  pinMode(SEL_PIN, INPUT);
-  digitalWrite(SEL_PIN, HIGH);
+  pinMode(SEL_A_PIN, INPUT);
+  pinMode(SEL_B_PIN, INPUT);
+  digitalWrite(SEL_A_PIN, HIGH);
+  digitalWrite(SEL_B_PIN, HIGH);
   horz0 = analogRead(HORZ_PIN);
   vert0 = analogRead(VERT_PIN);
 }
@@ -16,4 +19,18 @@ int32_t joyRead(boolean vert) {
 
 float joyReadF(boolean vert) {
   return (float(joyRead(vert))) / 512.f;
+}
+
+bool buttonAPressed() {
+  if(digitalRead(SEL_A_PIN) == LOW) {
+    return true;
+  }
+  return false;
+}
+
+bool buttonBPressed() {
+  if(digitalRead(SEL_B_PIN) == LOW) {
+    return true;
+  }
+  return false;
 }
