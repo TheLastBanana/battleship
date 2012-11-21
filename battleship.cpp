@@ -20,5 +20,6 @@ void setup() {
 void loop() {
   if(!placingDone && updatePlacement()) {//If placing done is true, then updatePlacement will never evaluate.
     placingDone = true;
+    return;
   }
 }
