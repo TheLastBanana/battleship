@@ -5,6 +5,8 @@
 #include "globals.h"
 #include "joystick.h"
 
+bool placingDone = false;
+
 void setup() {
   Serial.begin(9600);
 
@@ -16,5 +18,7 @@ void setup() {
 }
 
 void loop() {
-  updatePlacement();
+  if(!placingDone && updatePlacement()) {//If placing done is true, then updatePlacement will never evaluate.
+    placingDone = true;
+  }
 }
