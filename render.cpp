@@ -131,7 +131,7 @@ void renderShip(Ship *ship, uint16_t color) {
 
   // Increment i by offset, then draw the ship at the resulting position.
   while (count < size) {
-    if (x < 0 || x >= MAP_SIZE || y < 0 || y >= MAP_SIZE) continue;
+    if (x < 0 || x >= MAP_SIZE || y < 0 || y >= MAP_SIZE) break;
 
     tft.fillCircle(GRID_X_OFFSET + GRID_WIDTH * x + GRID_WIDTH * 0.5,
 		   GRID_Y_OFFSET + GRID_HEIGHT * y + GRID_HEIGHT * 0.5,
