@@ -93,7 +93,7 @@ void posFromIndex(uint8_t index, uint8_t *x, uint8_t *y) {
  * Checks that a ship does not overlap with anything else (or the edge of the screen).
  * @param	map		The map.
  * @param	ship		The ship.
- * @param	Whether the area is clear of everything.
+ * @return	Whether the area is clear of everything.
  */
 bool shipClear(Map* map, Ship* ship) {
   // Get the start position and size of the ship.
