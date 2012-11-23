@@ -5,6 +5,6 @@
 
 void initWait();
 bool updateWait();
-void renderShot(int8_t x, int8_t y);
+void renderShot(int8_t x, int8_t y, bool *hit, Ship::TYPES *type);
 
 #endif

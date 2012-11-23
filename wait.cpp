@@ -9,15 +9,19 @@
 //private functions
 void renderShotMessage(int8_t x, int8_t y);
 
-void renderShot(int8_t x, int8_t y) {
+void renderShot(int8_t x, int8_t y, bool *hit, Ship::TYPES *type) {
   uint8_t* block = &myMap.squares[indexFromPos(x, y)];
   Ship::TYPES shipType = getShipType(*block);
   if(shipType) {
     setState(block, Map::HIT);
     myMap.ships[getShipIndex(shipType)].health--;
+    *hit = true;
+    *type = shipType;
   }
   else {
     setState(block, Map::MISS);
+    *hit = false;
+    *type = Ship::NONE;
   }
   renderShotMessage(x, y);
   renderMap(&myMap);
@@ -55,8 +59,11 @@ void initWait() {
  */
 bool updateWait() {
   int8_t x, y;
+  bool hit;
+  Ship::TYPES type;
   getPosition(&x, &y);
-  renderShot(x, y);
+  renderShot(x, y, &hit, &type);
+  sendResponse(hit, type);
 
   while (!buttonAPressed()) {}
 
