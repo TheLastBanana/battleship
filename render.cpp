@@ -204,6 +204,7 @@ void renderMap(Map *map) {
  void renderCursor(uint8_t x, uint8_t y) {
    x = x * GRID_WIDTH + 4;
    y = y * GRID_WIDTH + 4;
-   tft.drawLine(x + 1, y + 1, x + GRID_WIDTH - 1, y + GRID_HEIGHT - 1, ST7735_RED);
-   tft.drawLine(x + 1, y + GRID_HEIGHT - 1, x + GRID_WIDTH - 1, y + 1, ST7735_RED);
+   tft.drawFastVLine(x + GRID_WIDTH * 0.5, y + 1, GRID_HEIGHT - 1, ST7735_YELLOW);
+   tft.drawFastHLine(x + 1, y + GRID_HEIGHT * 0.5, GRID_WIDTH - 1, ST7735_YELLOW);
+   tft.drawRect(x, y, GRID_WIDTH + 1, GRID_HEIGHT + 1, ST7735_YELLOW);
  }
