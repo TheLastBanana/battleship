@@ -27,5 +27,6 @@ void setShipType(uint8_t* block, Ship::TYPES type);
 uint8_t indexFromPos(uint8_t x, uint8_t y);
 void posFromIndex(uint8_t index, uint8_t *x, uint8_t *y);
 bool shipClear(Map* map, Ship* ship);
+uint8_t getShipIndex(Ship::TYPES type);
 
 #endif
