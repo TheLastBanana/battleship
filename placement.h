@@ -5,6 +5,5 @@
 
 void initPlacement();
 bool updatePlacement();
-void renderPlacementInfo();
 
 #endif

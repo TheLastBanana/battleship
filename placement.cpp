@@ -9,6 +9,7 @@ uint8_t currentShip;
 
 //private functions
 bool nextShip();
+void renderInfo();
 
 /*
  * Start the ship placement screen.
@@ -19,7 +20,7 @@ void initPlacement() {
   myMap.ships[currentShip].x = 0;
   myMap.ships[currentShip].y = 0;
   renderMap(&myMap);
-  renderPlacementInfo();
+  renderInfo();
 }
 
 /**
@@ -120,14 +121,14 @@ bool nextShip() {
   myMap.ships[currentShip].y = 0;
   
   renderMap(&myMap);
-  renderPlacementInfo();
+  renderInfo();
   return false;
 }
 
 /*
  * Render the placement text at the bottom of the screen.
  */
-void renderPlacementInfo() {
+void renderInfo() {
   tft.fillRect(0, 128, 128, 32, ST7735_BLACK);
   tft.setCursor(34, 128);
   tft.print("Place your");
