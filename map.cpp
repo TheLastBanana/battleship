@@ -5,9 +5,9 @@
  * Fills ships in order Patrol>Sub>Destroyer>Battleship>Carrier
  * with coordinates (-1, -1), the default ship health for each,
  * facing right, and each ship type.
- * @param map Pointer to the map to fill.
- * @param initialState The state to initialize each square to.
- * @returns Fully initialized map.
+ * @param	map 		Pointer to the map to fill.
+ * @param 	initialState 	The state to initialize each square to.
+ * @returns 			Fully initialized map.
  */
 Map initMap(Map* curMap, uint8_t initialState) {
   //Patrol
@@ -32,8 +32,8 @@ Map initMap(Map* curMap, uint8_t initialState) {
 
 /**
  * Gets the current state from a square.
- * @param block The square to retrieve the state from.
- * @returns The current state of the square.
+ * @param 	block 	The square to retrieve the state from.
+ * @returns 		The current state of the square.
  */
 
 Map::STATE getState(uint8_t block) {

@@ -25,7 +25,7 @@ void initPlacement() {
 
 /**
  * Update the ship placement screen.
- * @returns	bool true if done placement, false otherwise
+ * @returns	true if done placement, false otherwise
  */
 bool updatePlacement() {
   Ship *ship = &myMap.ships[currentShip];
@@ -67,7 +67,7 @@ bool updatePlacement() {
 
 /**
  * Update which ship is currrently being placed
- * @returns	bool true if reached NUM_SHIPS, false otherwise
+ * @returns	true if reached NUM_SHIPS, false otherwise
  */
 bool nextShip() {
   // Get the start position and size of the ship.
