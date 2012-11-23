@@ -27,23 +27,24 @@ void startPlacement() {
  * @returns	bool true if done placement, false otherwise
  */
 bool updatePlacement() {
+  Ship *ship = &myMap.ships[currentShip];
   float vert = joyReadF(true), horiz = joyReadF(false);
   bool updated = false;
   if(vert < -joyThreshold && myMap.ships[currentShip].y > 0) {
-    myMap.ships[currentShip].y--;
+    ship->y--;
     updated = true;
   }
   else if(vert > joyThreshold && myMap.ships[currentShip].y < MAP_SIZE - 1) {
-    myMap.ships[currentShip].y++;
+    ship->y++;
     updated = true;
   }
   
   if(horiz < -joyThreshold && myMap.ships[currentShip].x > 0) {
-    myMap.ships[currentShip].x--;
+    ship->x--;
     updated = true;
   }
   else if(horiz > joyThreshold && myMap.ships[currentShip].x < MAP_SIZE - 1) {
-    myMap.ships[currentShip].x++;
+    ship->x++;
     updated = true;
   }
   
@@ -51,28 +52,13 @@ bool updatePlacement() {
     renderMap(&myMap);
   }
   
+  // Rotate the ship.
   if(buttonBPressed()) {
-    switch(myMap.ships[currentShip].direction) {
-    case Ship::RIGHT:
-      myMap.ships[currentShip].direction = Ship::UP;
-      break;
-    case Ship::UP:
-      myMap.ships[currentShip].direction = Ship::LEFT;
-      break;
-    case Ship::LEFT:
-      myMap.ships[currentShip].direction = Ship::DOWN;
-      break;
-    case Ship::DOWN:
-      myMap.ships[currentShip].direction = Ship::RIGHT;
-      break;
-    default:
-      myMap.ships[currentShip].direction = Ship::RIGHT;
-      break;
-    }
+    ship->direction = Ship::DIRECTIONS(((int)ship->direction + 1) % 4);
     renderMap(&myMap);
   }
 
-  if(buttonAPressed()) {
+  if(buttonAPressed() && shipClear(&myMap, ship)) {
     return nextShip();
   }
   return false;
@@ -83,7 +69,7 @@ bool updatePlacement() {
  * @returns	bool true if reached NUM_SHIPS, false otherwise
  */
 bool nextShip() {
-    // Get the start position and size of the ship.
+  // Get the start position and size of the ship.
   int8_t x = myMap.ships[currentShip].x;
   int8_t y = myMap.ships[currentShip].y;
 
