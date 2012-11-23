@@ -3,6 +3,7 @@
 #include "map.h"
 #include "placement.h"
 #include "aim.h"
+#include "wait.h"
 #include "globals.h"
 #include "joystick.h"
 #include "network.h"
@@ -17,6 +18,10 @@ void initState(STATE newState) {
     initAim();
     break;
 
+  case WAIT:
+    initWait();
+    break;
+
   default:
     break;
   }
@@ -26,6 +31,7 @@ void initState(STATE newState) {
 
 void setup() {
   Serial.begin(9600);
+  Serial1.begin(4800);
 
   initMap(&enemyMap, Map::UNKNOWN);
 
@@ -58,6 +64,10 @@ void loop() {
 
   case AIM:
     if (updateAim()) initState(WAIT);
+    break;
+
+  case WAIT:
+    if (updateWait()) initState(AIM);
     break;
 
   default:

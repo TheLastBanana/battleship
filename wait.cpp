@@ -6,9 +6,9 @@
 #include "network.h"
 
 //private functions
-void renderShotMessage(uint8_t x, uint8_t y);
+void renderShotMessage(int8_t x, int8_t y);
 
-void renderShot(uint8_t x, uint8_t y) {
+void renderShot(int8_t x, int8_t y) {
   uint8_t* block = &myMap.squares[indexFromPos(x, y)];
   Ship::TYPES shipType = getShipType(*block);
   if(shipType) {
@@ -19,6 +19,7 @@ void renderShot(uint8_t x, uint8_t y) {
     setState(block, Map::MISS);
   }
   renderShotMessage(x, y);
+  renderMap(&myMap);
 }
 
 /**
@@ -51,8 +52,10 @@ void initWait() {
  * Update the wait screen.
  * @returns	bool true if the enemy has fired, false otherwise
  */
-void updateWait() {
+bool updateWait() {
   int8_t x, y;
   getPosition(&x, &y);
-  renderShotMessage(x, y);
+  renderShot(x, y);
+
+  return true;
 }

@@ -4,7 +4,7 @@
 #include <Arduino.h>
 
 void initWait();
-void updateWait();
+bool updateWait();
 void renderShot(int8_t x, int8_t y);
 
 #endif
