@@ -4,6 +4,7 @@
 #include "render.h"
 #include "map.h"
 #include "network.h"
+#include "joystick.h"
 
 //private functions
 void renderShotMessage(int8_t x, int8_t y);
@@ -56,6 +57,8 @@ bool updateWait() {
   int8_t x, y;
   getPosition(&x, &y);
   renderShot(x, y);
+
+  while (!buttonAPressed()) {}
 
   return true;
 }

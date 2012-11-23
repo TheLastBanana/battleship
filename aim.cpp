@@ -80,6 +80,8 @@ bool updateAim() {
       tft.print("You hit!");
     }
 
+    while (!buttonAPressed()) {}
+
     return true;
   }
   return false;
