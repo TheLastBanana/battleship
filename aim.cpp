@@ -68,17 +68,19 @@ bool updateAim() {
 
     tft.fillRect(0, 128, 128, 32, ST7735_BLACK);
     if (hit) {
-      tft.setCursor(40, 136);
-      tft.print("You hit!");
-    } else if (type != Ship::NONE) {
-      tft.setCursor(4, 128);
-      tft.print("You sunk the enemy's");
+      if (type != Ship::NONE) {
+	tft.setCursor(4, 128);
+	tft.print("You sunk the enemy's");
 
-      String name = getTypeName(type);
+	String name = getTypeName(type);
 
-      tft.setCursor(64 - (name.length() + 1) * 3, 136);
-      tft.print(name);
-      tft.print("!");
+	tft.setCursor(64 - (name.length() + 1) * 3, 136);
+	tft.print(name);
+	tft.print("!");
+      } else {
+	tft.setCursor(40, 136);
+	tft.print("You hit!");
+      }
     } else {
       tft.setCursor(31, 136);
       tft.print("You missed!");
