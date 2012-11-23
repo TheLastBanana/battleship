@@ -2,9 +2,11 @@
 #include "globals.h"
 #include "render.h"
 #include "joystick.h"
+#include "network.h"
+#include "ship.h"
 
-uint8_t aimX;
-uint8_t aimY;
+int8_t aimX;
+int8_t aimY;
 
 //private functions
 void renderAimInfo();
@@ -51,6 +53,33 @@ bool updateAim() {
   }
 
   if(buttonAPressed() && getState(enemyMap.squares[indexFromPos(aimX, aimY)]) == Map::UNKNOWN) {
+    // Fire the shot!
+    listenUntil(ENQ);
+    sendPosition(aimX, aimY);
+    
+    // Get back a response
+    bool hit = false;
+    Ship::TYPES type = Ship::NONE;
+    getResponse(&hit, &type);
+
+    tft.fillRect(0, 128, 128, 32, ST7735_BLACK);
+    if (hit) {
+      tft.setCursor(43, 136);
+      tft.print("You missed!");
+    } else if (type != Ship::NONE) {
+      tft.setCursor(4, 128);
+      tft.print("You sunk the enemy's");
+
+      String name = getTypeName(type);
+
+      tft.setCursor(64 - (name.length() + 1) * 3, 136);
+      tft.print(name);
+      tft.print("!");
+    } else {
+      tft.setCursor(40, 136);
+      tft.print("You hit!");
+    }
+
     return true;
   }
   return false;

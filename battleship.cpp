@@ -5,6 +5,7 @@
 #include "aim.h"
 #include "globals.h"
 #include "joystick.h"
+#include "network.h"
 
 void initState(STATE newState) {
   switch (newState) {

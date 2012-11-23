@@ -1,6 +1,5 @@
 #include <Arduino.h>
 #include "network.h"
-#include "ship.h"
 
 /**
  * Sends an (x,y) position to the opposing arduino over Serial1.
@@ -8,9 +7,9 @@
  * @param	y	The y position.
  */
 void sendPosition(int8_t x, int8_t y) {
-  Serial.write(x);
-  Serial.write(y);
-  Serial.write(EOT);
+  Serial1.write(x);
+  Serial1.write(y);
+  Serial1.write(EOT);
 }
 
 /**
