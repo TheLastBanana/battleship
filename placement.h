@@ -3,7 +3,7 @@
 
 #include "Arduino.h"
 
-void startPlacement();
+void initPlacement();
 bool updatePlacement();
 void renderPlacementInfo();
 

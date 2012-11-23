@@ -13,7 +13,7 @@ bool nextShip();
 /*
  * Start the ship placement screen.
  */
-void startPlacement() {
+void initPlacement() {
   initMap(&myMap, Map::NONE);
   currentShip = 0;
   myMap.ships[currentShip].x = 0;

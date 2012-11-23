@@ -5,7 +5,18 @@
 #include "globals.h"
 #include "joystick.h"
 
-bool placingDone = false;
+void initState(STATE newState) {
+  switch (newState) {
+  case PLACEMENT:
+    initPlacement();
+    break;
+
+  default:
+    break;
+  }
+
+  gameState = newState;
+}
 
 void setup() {
   Serial.begin(9600);
@@ -14,12 +25,18 @@ void setup() {
   
   initRender();
 
-  startPlacement();
+  initState(gameState);
 }
 
 void loop() {
-  if(!placingDone && updatePlacement()) {//If placing done is true, then updatePlacement will never evaluate.
-    placingDone = true;
-    return;
+  switch (gameState) {
+  case PLACEMENT:
+    if (updatePlacement()) {
+      initState(player == PLAYER_1 ? AIM : WAIT);
+    }
+    break;
+
+  default:
+    break;
   }
 }
