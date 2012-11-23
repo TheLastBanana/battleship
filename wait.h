@@ -3,6 +3,8 @@
 
 #include <Arduino.h>
 
-void renderShot(uint8_t x, uint8_t y);
+void initWait();
+void updateWait();
+void renderShot(int8_t x, int8_t y);
 
 #endif

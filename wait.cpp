@@ -3,6 +3,7 @@
 #include "wait.h"
 #include "render.h"
 #include "map.h"
+#include "network.h"
 
 //private functions
 void renderShotMessage(uint8_t x, uint8_t y);
@@ -25,7 +26,7 @@ void renderShot(uint8_t x, uint8_t y) {
  * @param	x	X component of the shot, will be converted to a character A-J
  * @param	y	Y component of the shot
  */
-void renderShotMessage(uint8_t x, uint8_t y) {
+void renderShotMessage(int8_t x, int8_t y) {
   char xChar = 0x41 + x; //0x41 = 'A'
   
   tft.fillRect(0, 128, 128, 32, ST7735_BLACK);
@@ -36,4 +37,22 @@ void renderShotMessage(uint8_t x, uint8_t y) {
   tft.print(xChar);
   tft.print(y);
   tft.print("!");
+}
+
+/**
+ * Start the wait screen.
+ */
+void initWait() {
+  renderMap(&myMap);
+  Serial1.write(ENQ);
+}
+
+/**
+ * Update the wait screen.
+ * @returns	bool true if the enemy has fired, false otherwise
+ */
+void updateWait() {
+  int8_t x, y;
+  getPosition(&x, &y);
+  renderShotMessage(x, y);
 }
