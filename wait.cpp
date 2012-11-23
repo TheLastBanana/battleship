@@ -8,14 +8,14 @@
 void renderShotMessage(uint8_t x, uint8_t y);
 
 void renderShot(uint8_t x, uint8_t y) {
-  uint8_t* block = &myMap.squares[getIndexFromPos(x, y)];
+  uint8_t* block = &myMap.squares[indexFromPos(x, y)];
   Ship::TYPES shipType = getShipType(*block);
   if(shipType) {
-    setState(*block, Map::HIT);
-    myMap.ships[getShipIndex(shipType)]--;
+    setState(block, Map::HIT);
+    myMap.ships[getShipIndex(shipType)].health--;
   }
   else {
-    setState(*block, Map::MISS);
+    setState(block, Map::MISS);
   }
   renderShotMessage(x, y);
 }

@@ -147,3 +147,31 @@ bool shipClear(Map* map, Ship* ship) {
 
   return true;
 }
+
+/**
+ * Gives a ship's index in the map.ships array based on its type.
+ * @param	type	Type of ship
+ * @return		The index of the ship.
+ */
+uint8_t getShipIndex(Ship::TYPES type) {
+  switch(type) {
+  case Ship::PATROL:
+    return 0;
+    break;
+  case Ship::SUBMARINE:
+    return 1;
+    break;
+  case Ship::DESTROYER:
+    return 2;
+    break;
+  case Ship::BATTLESHIP:
+    return 3;
+    break;
+  case Ship::CARRIER:
+    return 4;
+    break;
+  default:
+    return 0;
+    break;
+  }
+}
