@@ -63,6 +63,10 @@ bool updateWait() {
   Ship::TYPES type;
   getPosition(&x, &y);
   renderShot(x, y, &hit, &type);
+  Serial.print("Hit: ");//DEBUG
+  Serial.println(hit);//DEBUG
+  Serial.print("Type: ");//DEBUG
+  Serial.println(getTypeName(type));//DEBUG
   sendResponse(hit, type);
 
   while (!buttonAPressed()) {}

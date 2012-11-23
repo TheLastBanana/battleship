@@ -61,11 +61,15 @@ bool updateAim() {
     bool hit = false;
     Ship::TYPES type = Ship::NONE;
     getResponse(&hit, &type);
+    Serial.print("Hit: ");//DEBUG
+    Serial.println(hit);//DEBUG
+    Serial.print("Type: ");//DEBUG
+    Serial.println(getTypeName(type));//DEBUG
 
     tft.fillRect(0, 128, 128, 32, ST7735_BLACK);
     if (hit) {
-      tft.setCursor(43, 136);
-      tft.print("You missed!");
+      tft.setCursor(40, 136);
+      tft.print("You hit!");
     } else if (type != Ship::NONE) {
       tft.setCursor(4, 128);
       tft.print("You sunk the enemy's");
@@ -76,9 +80,12 @@ bool updateAim() {
       tft.print(name);
       tft.print("!");
     } else {
-      tft.setCursor(40, 136);
-      tft.print("You hit!");
+      tft.setCursor(31, 136);
+      tft.print("You missed!");
     }
+
+    setState(&enemyMap.squares[indexFromPos(aimX, aimY)], hit ? Map::HIT : Map::MISS);
+    renderMap(&enemyMap);
 
     while (!buttonAPressed()) {}
 

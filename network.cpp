@@ -36,6 +36,7 @@ void getPosition(int8_t *x, int8_t *y) {
   else { 
     (*x) = temp1;
     (*y) = temp2;
+    Serial.println("Position received");//DEBUG
   }
 }
 
@@ -89,5 +90,6 @@ void getResponse(bool *hit, Ship::TYPES *type) {
   else {
     (*hit) = temp1;
     (*type) = temp2;
+    Serial.println("Response received");//DEBUG
   } 
 }
