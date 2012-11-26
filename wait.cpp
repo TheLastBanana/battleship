@@ -5,9 +5,10 @@
 #include "map.h"
 #include "network.h"
 #include "joystick.h"
+#include "ship.h"
 
 //private functions
-void renderShotMessage(int8_t x, int8_t y);
+void renderShotMessage(int8_t x, int8_t y, bool hit, Ship::TYPES type);
 
 void renderShot(int8_t x, int8_t y, bool *hit, Ship::TYPES *type) {
   uint8_t* block = &myMap.squares[indexFromPos(x, y)];
@@ -19,12 +20,13 @@ void renderShot(int8_t x, int8_t y, bool *hit, Ship::TYPES *type) {
     *hit = true;
     if (*health == 0) *type = shipType;
     else *type = Ship::NONE;
+    renderShotMessage(x, y, *hit, *type);
   } else {
     setState(block, Map::MISS);
     *hit = false;
     *type = Ship::NONE;
+    renderShotMessage(x, y, *hit, *type);
   }
-  renderShotMessage(x, y);
   renderMap(&myMap);
 }
 
@@ -33,17 +35,24 @@ void renderShot(int8_t x, int8_t y, bool *hit, Ship::TYPES *type) {
  * @param	x	X component of the shot, will be converted to a character A-J
  * @param	y	Y component of the shot
  */
-void renderShotMessage(int8_t x, int8_t y) {
-  char xChar = 0x41 + x; //0x41 = 'A'
-  
-  tft.fillRect(0, 128, 128, 32, ST7735_BLACK);
-  tft.setCursor(25, 128);
-  tft.print("Enemy shot at");
+void renderShotMessage(int8_t x, int8_t y, bool hit, Ship::TYPES type) {
+  uint8_t length;
+  if(type != Ship::NONE)  length = 3;
+  else length = 2;
 
-  tft.setCursor(55, 136);
-  tft.print(xChar);
-  tft.print(y);
-  tft.print("!");
+  char xChar = 0x41 + x; //0x41 = 'A'
+
+  String messages[length];
+  messages[0] = "Enemy shot at " + (String) xChar  + (String) y;
+  if(type != Ship::NONE) {    
+    messages[1] = "and sunk your";
+    messages[2] = getTypeName(type) + '!';
+  }
+  else {
+    messages[1] = "and " + (hit ? (String) "hit!" : (String) "missed!");
+  }
+
+  renderMessage(messages, length);
 }
 
 /**
