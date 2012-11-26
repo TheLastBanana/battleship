@@ -220,7 +220,7 @@ void renderMessage(String messages[], uint8_t length) {
 
   tft.fillRect(0, 128, 128, 32, ST7735_BLACK);
   for(uint8_t i = 0; i < length; i++) {
-    tft.setCursor(64 - (messages[i].length() / 2), 128 + (i *8));
+    tft.setCursor(64 - (messages[i].length() / 2) * 6, 128 + (i * 8));
     tft.print(messages[i]);
   }
 }
