@@ -49,6 +49,8 @@ void loop() {
 	char temp = Serial1.read();
 	if (temp == ENQ) {
 	  player = PLAYER_2;
+	  String messages[] = {"Wait for the", "enemy to fire!"};
+	  renderMessage(messages, 2);
 	} else {
 	  Serial.println("Connection error! No ENQ found.");
 	  return;
