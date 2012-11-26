@@ -60,6 +60,8 @@ void renderShotMessage(int8_t x, int8_t y, bool hit, Ship::TYPES type) {
  */
 void initWait() {
   renderMap(&myMap);
+  String messages[] = {"Wait for the", "enemy to fire!"};
+  renderMessage(messages, 2);
   Serial1.write(ENQ);
 }
 
