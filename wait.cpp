@@ -15,12 +15,11 @@ void renderShot(int8_t x, int8_t y, bool *hit, Ship::TYPES *type) {
   if (shipType) {
     setState(block, Map::HIT);
     uint8_t *health = &(myMap.ships[getShipIndex(shipType)].health);
-    *health--;
+    (*health)--;
     *hit = true;
     if (*health == 0) *type = shipType;
     else *type = Ship::NONE;
-  }
-  else {
+  } else {
     setState(block, Map::MISS);
     *hit = false;
     *type = Ship::NONE;
