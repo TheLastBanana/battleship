@@ -66,24 +66,18 @@ bool updateAim() {
     Serial.print("Type: ");//DEBUG
     Serial.println(getTypeName(type));//DEBUG
 
-    tft.fillRect(0, 128, 128, 32, ST7735_BLACK);
     if (hit) {
       if (type != Ship::NONE) {
-	tft.setCursor(4, 128);
-	tft.print("You sunk the enemy's");
-
 	String name = getTypeName(type);
-
-	tft.setCursor(64 - (name.length() + 1) * 3, 136);
-	tft.print(name);
-	tft.print("!");
+	String message[] = {"You sunk the enemy's", name + "!"};
+	renderMessage(message, 2);
       } else {
-	tft.setCursor(40, 136);
-	tft.print("You hit!");
+	String message[] = {"You hit!"};
+	renderMessage(message, 1);
       }
     } else {
-      tft.setCursor(31, 136);
-      tft.print("You missed!");
+      String message[] = {"You missed!"};
+      renderMessage(message, 1);
     }
 
     setState(&enemyMap.squares[indexFromPos(aimX, aimY)], hit ? Map::HIT : Map::MISS);
@@ -100,7 +94,6 @@ bool updateAim() {
  * Render the placement text at the bottom of the screen.
  */
 void renderAimInfo() {
-  tft.fillRect(0, 128, 128, 32, ST7735_BLACK);
-  tft.setCursor(22, 136);
-  tft.print("Aim your shot!");
+  String message[] = {"Aim your shot!"};
+  renderMessage(message, 1);
 }
