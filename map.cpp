@@ -175,3 +175,15 @@ uint8_t getShipIndex(Ship::TYPES type) {
     break;
   }
 }
+
+/**
+ * Returns whether all of the ships on a given map are sunk.
+ * @return	Whether all ships are sunk.
+ */
+bool allShipsSunk(Map* map) {
+  for (uint8_t i = 0; i < NUM_SHIPS; i++) {
+    if (map->ships[i].health > 0) return false;
+  }
+
+  return true;
+}
