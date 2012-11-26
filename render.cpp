@@ -209,9 +209,17 @@ void renderMap(Map *map) {
    tft.drawRect(x, y, GRID_WIDTH + 1, GRID_HEIGHT + 1, ST7735_YELLOW);
  }
 
-void renderMessage(String messages[]) {
+/**
+ * Clears the text area, then renders a new message in its place.
+ * Theoretically, passing in length = 0 will result in an empty screen.
+ * @param	messages	Array of messages to render
+ * @param	length		The number of lines to render, maximum four.
+ */
+void renderMessage(String messages[], uint8_t length) {
+  if(length > 4) length = 4;
+
   tft.fillRect(0, 128, 128, 32, ST7735_BLACK);
-  for(uint8_t i = 0; i < 3; i++) {
+  for(uint8_t i = 0; i < length; i++) {
     tft.setCursor(64 - (messages[i].length() / 2), 128 + (i *8));
     tft.print(messages[i]);
   }
