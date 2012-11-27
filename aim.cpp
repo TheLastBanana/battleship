@@ -69,10 +69,12 @@ bool updateAim() {
     if (hit) {
       if (type != Ship::NONE) {
 	String name = getTypeName(type);
+	enemyMap.ships[getShipIndex(type)].health = 0;
 	String message[] = {"You sunk the enemy's", name + "!"};
 	renderMessage(message, 2);
       } else {
 	String message[] = {"You hit!"};
+	
 	renderMessage(message, 1);
       }
     } else {
