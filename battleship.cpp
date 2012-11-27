@@ -40,7 +40,7 @@ void initState(STATE newState) {
 
 void setup() {
   Serial.begin(9600);
-  Serial1.begin(4800);
+  Serial1.begin(2400);
 
   initMap(&enemyMap, Map::UNKNOWN);
 
@@ -59,7 +59,12 @@ void loop() {
 	if (temp == ENQ) {
 	  player = PLAYER_2;
 	} else {
-	  Serial.println("Connection error! No ENQ found.");
+	  Serial.print("Connection error! No ENQ found. ");
+	  Serial.print("Found ");
+	  Serial.print(temp, HEX);
+	  Serial.println(" instead.");
+	  Serial.print(Serial1.available());
+	  Serial.println(" more bytes available.");
 	  return;
 	}
       } else {
