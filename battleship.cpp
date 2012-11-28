@@ -40,7 +40,7 @@ void initState(STATE newState) {
 
 void setup() {
   Serial.begin(9600);
-  Serial1.begin(2400);
+  networkInit();
 
   initMap(&enemyMap, Map::UNKNOWN);
 

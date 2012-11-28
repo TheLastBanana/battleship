@@ -1,6 +1,18 @@
 #include <Arduino.h>
+#include <VirtualWire.h>
 #include "network.h"
 #include "globals.h"
+
+/**
+ * Initializes the network code.
+ */
+void networkInit() {
+  vw_set_tx_pin(TXPIN);
+  vw_set_rx_pin(RXPIN);
+  vw_set_ptt_pin(PTTPIN);
+  vw_setup(2000);
+  vw_rx_start();
+}
 
 /**
  * Sends an (x,y) position to the opposing arduino over Serial1.
@@ -8,9 +20,13 @@
  * @param	y	The y position.
  */
 void sendPosition(int8_t x, int8_t y) {
-  Serial1.write(x);
-  Serial1.write(y);
-  Serial1.write(EOT);
+  uint8_t len = 2;
+  uint8_t buf[len];
+  buf[0] = x;
+  buf[1] = y;
+
+  vw_send(buf, len);
+  vw_wait_tx();
 }
 
 /**
@@ -22,14 +38,17 @@ void sendPosition(int8_t x, int8_t y) {
  */
 void getPosition(int8_t *x, int8_t *y) {
   Serial.println("Beginning wait for position");//DEBUG
-  while(Serial1.available() < 3) {} //wait for three bytes to fill the buffer
+  
+  uint8_t len = 2;
+  uint8_t buf[len];
+  vw_wait_rx();
 
-  int8_t temp1 = (int8_t) Serial1.read();
-  int8_t temp2 = (int8_t) Serial1.read();
-  uint8_t eot = (uint8_t) Serial1.read();
+  bool checkSum = vw_get_message(buf, &len);
+  int8_t temp1 = (int8_t) buf[0];
+  int8_t temp2 = (int8_t) buf[1];
 
-  if(eot != EOT) {
-    Serial.print("Error: getPosition() received third byte that was not EOT."); Serial.println(eot, HEX); //DEBUG
+  if(!checkSum) {
+    Serial.print("Error: getPosition() got a bad checksum.");
     Serial.println("--Returning offscreen position--"); //DEBUG
     (*x) = -1;
     (*y) = -1;
@@ -42,23 +61,26 @@ void getPosition(int8_t *x, int8_t *y) {
 }
 
 /**
- * Listens to Serial1 for a specified char, returning only after that char is received.
+ * Listens for a specified char, returning only after that char is received.
  * Will hard loop with no chance of escape until the specified char is received.
  * @param	c	The char to listen for.
  */
 void listenUntil(char c) {
-  while( 1 ) {
-    if(Serial1.available()) {
-      char temp = (char) Serial1.read();
-      if(c == temp) {
-	Serial.print("Listened until and found: "); Serial.println(c, HEX);//DEBUG
-	return;
-      }
-      else {//DEBUG
-	Serial.print("Listening for char(hex): "); Serial.println(c, HEX);//DEBUG
-	Serial.print("Read char(hex): "); Serial.println(c, HEX);//DEBUG
-      }//DEBUG
+  while (1) {
+    uint8_t len = 1;
+    uint8_t buf[len];
+
+    vw_wait_rx();
+    vw_get_message(buf, &len);
+    char temp = (char) buf[0];
+    if(c == temp) {
+      Serial.print("Listened until and found: "); Serial.println(c, HEX);//DEBUG
+      return;
     }
+    else {//DEBUG
+      Serial.print("Listening for char(hex): "); Serial.println(c, HEX);//DEBUG
+      Serial.print("Read char(hex): "); Serial.println(c, HEX);//DEBUG
+    }//DEBUG
   }
 }
 
@@ -69,9 +91,13 @@ void listenUntil(char c) {
  * @param	type	uint8 containing the type of ship hit if and only if the ship was sunk.
  */
 void sendResponse(bool hit, uint8_t type) {
-  Serial1.write(hit);
-  Serial1.write(type);
-  Serial1.write(EOT);
+  uint8_t len = 2;
+  uint8_t buf[len];
+  buf[0] = hit;
+  buf[1] = type;
+
+  vw_send(buf, len);
+  vw_wait_tx();
 }
 
 /**
@@ -81,14 +107,17 @@ void sendResponse(bool hit, uint8_t type) {
  */
 void getResponse(bool *hit, Ship::TYPES *type) {
   Serial.println("Beginning wait for response");//DEBUG
-  while(Serial1.available() < 3) {}
 
-  bool temp1 = (bool) Serial1.read();
-  Ship::TYPES temp2 = (Ship::TYPES) Serial1.read();
-  uint8_t eot = (uint8_t) Serial1.read();
+  uint8_t len = 2;
+  uint8_t buf[len];
+  vw_wait_rx();
 
-  if(eot != EOT) {
-    Serial.print("Error: getResponse() received third byte that was not EOT, "); Serial.println(eot, HEX); //DEBUG
+  bool checkSum = vw_get_message(buf, &len);
+  bool temp1 = (bool) buf[0];
+  Ship::TYPES temp2 = (Ship::TYPES) buf[1];
+
+  if (checkSum) {
+    Serial.print("Error: getResponse() receieved a bad checksum.");
     Serial.println("--Returning miss and no ship type--"); //DEBUG
     (*hit) = false;
     (*type) = Ship::NONE;
@@ -101,8 +130,13 @@ void getResponse(bool *hit, Ship::TYPES *type) {
 }
 
 void determinePlayer() {
-  if (Serial1.available()) {
-    char temp = Serial1.read();//NEED TO READ CHAR OUT OF BUFFER, DON'T DELETE
+  if (vw_have_message()) {
+    uint8_t len = 1;
+    uint8_t buf[len];
+
+    vw_get_message(buf, &len);
+    char temp = (char) buf[0];
+
     if (temp == ENQ) {
       player = PLAYER_2;
     } else {
@@ -116,6 +150,12 @@ void determinePlayer() {
     }
   } else {
     player = PLAYER_1;
-    Serial1.write(ENQ);
+
+    uint8_t len = 1;
+    uint8_t buf[len];
+    buf[0] = ENQ;
+
+    vw_send(buf, len);
+    vw_wait_tx();
   }
 }
