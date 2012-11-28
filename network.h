@@ -12,5 +12,5 @@ void getPosition(int8_t *x, int8_t *y);
 void listenUntil(char c);
 void sendResponse(bool hit, uint8_t type);
 void getResponse(bool *hit, Ship::TYPES *type);
-
+void determinePlayer();
 #endif
