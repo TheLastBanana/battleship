@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "network.h"
+#include "globals.h"
 
 /**
  * Sends an (x,y) position to the opposing arduino over Serial1.
@@ -73,6 +74,11 @@ void sendResponse(bool hit, uint8_t type) {
   Serial1.write(EOT);
 }
 
+/**
+ * Gets a response to a shot.
+ * @param	hit	Pointer to a boolean that will be filled with the hit state.
+ * @param	type	Pointer to a ship type, Ship::NONE if no ship sunk, something else if it was sunk.
+ */
 void getResponse(bool *hit, Ship::TYPES *type) {
   Serial.println("Beginning wait for response");//DEBUG
   while(Serial1.available() < 3) {}
@@ -92,4 +98,24 @@ void getResponse(bool *hit, Ship::TYPES *type) {
     (*type) = temp2;
     Serial.println("Response received");//DEBUG
   } 
+}
+
+void determinePlayer() {
+  if (Serial1.available()) {
+    char temp = Serial1.read();//NEED TO READ CHAR OUT OF BUFFER, DON'T DELETE
+    if (temp == ENQ) {
+      player = PLAYER_2;
+    } else {
+      Serial.print("Connection error! No ENQ found. ");//DEBUG
+      Serial.print("Found ");//DEBUG
+      Serial.print(temp, HEX);//DEBUG
+      Serial.println(" instead.");//DEBUG
+      Serial.print(Serial1.available());//DEBUG
+      Serial.println(" more bytes available.");//DEBUG
+      return;
+    }
+  } else {
+    player = PLAYER_1;
+    Serial1.write(ENQ);
+  }
 }
