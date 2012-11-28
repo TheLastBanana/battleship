@@ -53,25 +53,7 @@ void loop() {
   switch (gameState) {
   case PLACEMENT:
     if (updatePlacement()) {
-      // Get which player we are
-      if (Serial1.available()) {
-	char temp = Serial1.read();
-	if (temp == ENQ) {
-	  player = PLAYER_2;
-	} else {
-	  Serial.print("Connection error! No ENQ found. ");
-	  Serial.print("Found ");
-	  Serial.print(temp, HEX);
-	  Serial.println(" instead.");
-	  Serial.print(Serial1.available());
-	  Serial.println(" more bytes available.");
-	  return;
-	}
-      } else {
-	player = PLAYER_1;
-	Serial1.write(ENQ);
-      }
-
+      determinePlayer();
       initState(player == PLAYER_1 ? AIM : WAIT);
     }
     break;
