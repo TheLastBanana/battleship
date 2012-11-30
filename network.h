@@ -4,6 +4,11 @@
 #define ENQ 0x05
 #define EOT 0x04
 
+enum DATATYPE {
+  POSDATA = 0,
+  RSPDATA = 1
+};
+
 #define TXPIN	3
 #define RXPIN	2
 #define PTTPIN	13

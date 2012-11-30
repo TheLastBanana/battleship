@@ -20,13 +20,18 @@ void networkInit() {
  * @param	y	The y position.
  */
 void sendPosition(int8_t x, int8_t y) {
-  uint8_t len = 2;
-  uint8_t buf[len];
-  buf[0] = x;
-  buf[1] = y;
+  for (int i = 0; i < 3; i++) {
+    uint8_t len = 3;
+    uint8_t buf[len];
+    buf[0] = POSDATA;
+    buf[1] = x;
+    buf[2] = y;
 
-  vw_send(buf, len);
-  vw_wait_tx();
+    vw_send(buf, len);
+    vw_wait_tx();
+
+    delay(250);
+  }
 }
 
 /**
@@ -39,25 +44,28 @@ void sendPosition(int8_t x, int8_t y) {
 void getPosition(int8_t *x, int8_t *y) {
   Serial.println("Beginning wait for position");//DEBUG
   
-  uint8_t len = 2;
+  uint8_t len = 3;
   uint8_t buf[len];
-  vw_wait_rx();
 
-  bool checkSum = vw_get_message(buf, &len);
-  int8_t temp1 = (int8_t) buf[0];
-  int8_t temp2 = (int8_t) buf[1];
+  for (int i = 0; i < 3; i++) {
+    vw_wait_rx();
 
-  if(!checkSum) {
-    Serial.print("Error: getPosition() got a bad checksum.");
-    Serial.println("--Returning offscreen position--"); //DEBUG
-    (*x) = -1;
-    (*y) = -1;
+    bool checksum = vw_get_message(buf, &len);
+    int8_t type = (DATATYPE) buf[0];
+
+    if (checksum && type == POSDATA) break;
+
+    if (i == 2) {
+      Serial.println("Failed to recieve position!");
+      return;
+    }
   }
-  else { 
-    (*x) = temp1;
-    (*y) = temp2;
-    Serial.println("Position received");//DEBUG
-  }
+
+  int8_t temp1 = (int8_t) buf[1];
+  int8_t temp2 = (int8_t) buf[2];
+  (*x) = temp1;
+  (*y) = temp2;
+  Serial.println("Position received");//DEBUG
 }
 
 /**
@@ -91,13 +99,18 @@ void listenUntil(char c) {
  * @param	type	uint8 containing the type of ship hit if and only if the ship was sunk.
  */
 void sendResponse(bool hit, uint8_t type) {
-  uint8_t len = 2;
-  uint8_t buf[len];
-  buf[0] = hit;
-  buf[1] = type;
+  for (int i = 0; i < 3; i++) {
+    uint8_t len = 3;
+    uint8_t buf[len];
+    buf[0] = RSPDATA;
+    buf[1] = hit;
+    buf[2] = type;
 
-  vw_send(buf, len);
-  vw_wait_tx();
+    vw_send(buf, len);
+    vw_wait_tx();
+
+    delay(250);
+  }
 }
 
 /**
@@ -106,27 +119,28 @@ void sendResponse(bool hit, uint8_t type) {
  * @param	type	Pointer to a ship type, Ship::NONE if no ship sunk, something else if it was sunk.
  */
 void getResponse(bool *hit, Ship::TYPES *type) {
-  Serial.println("Beginning wait for response");//DEBUG
-
-  uint8_t len = 2;
+  Serial.println("Beginning wait for position");//DEBUG
+  
+  uint8_t len = 3;
   uint8_t buf[len];
-  vw_wait_rx();
 
-  bool checkSum = vw_get_message(buf, &len);
-  bool temp1 = (bool) buf[0];
-  Ship::TYPES temp2 = (Ship::TYPES) buf[1];
+  for (int i = 0; i < 3; i++) {
+    vw_wait_rx();
 
-  if (checkSum) {
-    Serial.print("Error: getResponse() receieved a bad checksum.");
-    Serial.println("--Returning miss and no ship type--"); //DEBUG
-    (*hit) = false;
-    (*type) = Ship::NONE;
+    bool checksum = vw_get_message(buf, &len);
+    int8_t type = (DATATYPE) buf[0];
+
+    if (checksum && type == POSDATA) break;
+
+    if (i == 2) {
+      Serial.println("Failed to recieve position!");
+      return;
+    }
   }
-  else {
-    (*hit) = temp1;
-    (*type) = temp2;
-    Serial.println("Response received");//DEBUG
-  } 
+
+  (*hit) = (bool) buf[1];
+  (*type) = (Ship::TYPES) buf[2];
+  Serial.println("Response received");//DEBUG
 }
 
 void determinePlayer() {

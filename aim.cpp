@@ -54,7 +54,7 @@ bool updateAim() {
 
   if(buttonAPressed() && getState(enemyMap.squares[indexFromPos(aimX, aimY)]) == Map::UNKNOWN) {
     // Fire the shot!
-    listenUntil(ENQ);
+    //listenUntil(ENQ);
     sendPosition(aimX, aimY);
     
     // Get back a response
