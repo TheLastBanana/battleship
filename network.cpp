@@ -12,6 +12,10 @@ uint8_t outPosPacket[3];
 uint8_t inRespPacket[2];
 uint8_t inPosPacket[2];
 
+// Current packet sending info
+DATATYPE currentSendType; //current datatype to be sent
+uint8_t currentAckTurn = 0;
+
 // Whether incoming packets have been receieved
 bool newInResp = false;
 bool newInPos = false;
@@ -139,4 +143,36 @@ void determinePlayer() {
     
     delay(250);
   }
+}
+
+void tick() {
+  //--------------START TX---------------//
+  uint8_t outLen;
+  if(currentSendType == ACK) {
+    outLen = 2;
+  }
+  else {
+    outLen = 4;
+  }
+
+  uint8_t outBuf[outLen];
+  outBuf[1] = currentSendType;
+
+  if(currentSendType == ACK) {
+    outBuf[0] = currentAckTurn;
+  }
+  else if(currentSendType == RSPDATA) {
+    outBuf[0] = outRespPacket[0];
+    outBuf[2] = outRespPacket[1];
+    outBuf[3] = outRespPacket[2];
+  }
+  else if(currentSendType == POSDATA) {
+    outBuf[0] = outPosPacket[0];
+    outBuf[2] = outPosPacket[1];
+    outBuf[3] = outPosPacket[2];
+  }
+
+  vw_send(outBuf, outLen);
+  vw_wait_tx();
+  //--------------END TX-----------------//
 }
