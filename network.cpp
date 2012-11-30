@@ -145,15 +145,19 @@ void determinePlayer() {
   for (int i = 0; i < 3; i++) {
     vw_send(buf, len);
     vw_wait_tx();
-    
+    Serial.println("loop");
     delay(250);
   }
-  
+ 
+  Serial.println("Print one.");
   Timer3.initialize();
-  Timer3.attachInterrupt(&tick, 50000);
+  Serial.println("Print two.");
+  Timer3.attachInterrupt(tick, 50000);
+  Serial.println("Done");
 }
 
 void tick() {
+  Serial.println("Interrupted");
   //--------------START RX---------------//
   if(vw_have_message()) {
     uint8_t inLen = 4;
@@ -206,6 +210,8 @@ void tick() {
   }
 
   vw_send(outBuf, outLen);
+  Serial.println("waiting");
   vw_wait_tx();
+  Serial.println("done waiting");
   //--------------END TX-----------------//
 }
