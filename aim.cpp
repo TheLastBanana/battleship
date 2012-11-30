@@ -89,6 +89,8 @@ bool updateAim() {
 
     Serial.println();
 
+    turn++;
+
     return true;
   }
   return false;

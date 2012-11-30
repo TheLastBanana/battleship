@@ -86,5 +86,7 @@ bool updateWait() {
 
   Serial.println();
 
+  turn++;
+
   return true;
 }

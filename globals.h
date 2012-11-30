@@ -22,5 +22,6 @@ extern Map myMap;
 extern Map enemyMap;
 extern STATE gameState;
 extern PLAYER player;
+extern uint8_t turn;
 
 #endif
