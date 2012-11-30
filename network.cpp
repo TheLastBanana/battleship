@@ -3,6 +3,14 @@
 #include "network.h"
 #include "globals.h"
 
+// Outgoing packets
+uint8_t outRespPacket[2];
+uint8_t outPosPacket[2];
+
+// Incoming packets
+uint8_t inRespPacket[2];
+uint8_t inPosPacket[2];
+
 /**
  * Initializes the network code.
  */
