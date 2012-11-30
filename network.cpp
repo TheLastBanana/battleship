@@ -59,7 +59,6 @@ void getPosition(int8_t *x, int8_t *y) {
   int8_t temp1 = (int8_t) buf[1];
   int8_t temp2 = (int8_t) buf[2];
 
-  Serial.println(
   (*x) = temp1;
   (*y) = temp2;
   Serial.println("Position received:");//DEBUG
@@ -132,11 +131,6 @@ void getResponse(bool *hit, Ship::TYPES *type) {
     int8_t type = (DATATYPE) buf[0];
 
     if (checksum && type == RSPDATA) break;
-
-    if (i == 2) {
-      Serial.println("Failed to recieve position!");
-      return;
-    }
   }
 
   (*hit) = (bool) buf[1];
