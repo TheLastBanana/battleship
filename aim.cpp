@@ -84,6 +84,7 @@ bool updateAim() {
 
     setState(&enemyMap.squares[indexFromPos(aimX, aimY)], hit ? Map::HIT : Map::MISS);
     renderMap(&enemyMap);
+    renderCursor(aimX, aimY);
 
     while (!buttonAPressed()) {}
 

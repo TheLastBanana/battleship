@@ -28,6 +28,7 @@ void renderShot(int8_t x, int8_t y, bool *hit, Ship::TYPES *type) {
     renderShotMessage(x, y, *hit, *type);
   }
   renderMap(&myMap);
+  renderCursor(x, y);
 }
 
 /**
