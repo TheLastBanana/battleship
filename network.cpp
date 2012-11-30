@@ -4,8 +4,9 @@
 #include "globals.h"
 
 // Outgoing packets
-uint8_t outRespPacket[2];
-uint8_t outPosPacket[2];
+// First byte is the turn, rest is data
+uint8_t outRespPacket[3];
+uint8_t outPosPacket[3];
 
 // Incoming packets
 uint8_t inRespPacket[2];
@@ -15,6 +16,9 @@ uint8_t inPosPacket[2];
 DATATYPE currentSendType; //current datatype to be sent
 uint8_t currentAckTurn = 0;
 
+// Whether incoming packets have been receieved
+bool newInResp = false;
+bool newInPos = false;
 
 /**
  * Initializes the network code.
@@ -33,52 +37,43 @@ void networkInit() {
  * @param	y	The y position.
  */
 void sendPosition(int8_t x, int8_t y) {
-  for (int i = 0; i < 3; i++) {
-    uint8_t len = 3;
-    uint8_t buf[len];
-    buf[0] = POSDATA;
-    buf[1] = x;
-    buf[2] = y;
-
-    vw_send(buf, len);
-    vw_wait_tx();
-
-    delay(250);
-  }
+  outPosPacket[0] = turn;
+  outPosPacket[1] = x;
+  outPosPacket[2] = y;
 }
 
 /**
- * Reads an (x,y) position from the opposing arduino over Serial1.
- * Will wait until three bytes are waiting in the buffer before proceeding with the read.
- * If the third byte read is not EOT then the position will default to offscreen.
+ * Reads an (x,y) position from the opposing arduino.
  * @param	x	Pointer to where the x position should be stored.
  * @param	y	Pointer to where the y position should be stored.
  */
 void getPosition(int8_t *x, int8_t *y) {
-  Serial.println("Beginning wait for position");//DEBUG
-  
-  uint8_t len = 3;
-  uint8_t buf[len];
+  while (!newInPos) {}
+  *x = inPosPacket[0];
+  *y = inPosPacket[1];
+}
 
-  while (1) {
-    vw_wait_rx();
+/**
+ * Sends a response to the shot position that includes whether or not it was hit
+ * as well as the type of shit that was hit in the even that it was sunk.
+ * @param	hit	Boolean that is true if there was a hit and false otherwise.
+ * @param	type	uint8 containing the type of ship hit if and only if the ship was sunk.
+ */
+void sendResponse(bool hit, uint8_t type) {
+  outRespPacket[0] = turn;
+  outRespPacket[1] = hit;
+  outRespPacket[2] = type;
+}
 
-    bool checksum = vw_get_message(buf, &len);
-    int8_t type = (DATATYPE) buf[0];
-
-    if (checksum && type == POSDATA) break;
-  }
-
-  int8_t temp1 = (int8_t) buf[1];
-  int8_t temp2 = (int8_t) buf[2];
-
-  (*x) = temp1;
-  (*y) = temp2;
-  Serial.println("Position received:");//DEBUG
-  Serial.print("x: ");//DEBUG
-  Serial.println(*x);//DEBUG
-  Serial.print("y: ");//DEBUG
-  Serial.println(*y);//DEBUG
+/**
+ * Gets a response to a shot.
+ * @param	hit	Pointer to a boolean that will be filled with the hit state.
+ * @param	type	Pointer to a ship type, Ship::NONE if no ship sunk, something else if it was sunk.
+ */
+void getResponse(bool *hit, Ship::TYPES *type) {
+  while (!newInResp) {}
+  *hit = (bool) inRespPacket[0];
+  *type = (Ship::TYPES) inRespPacket[1];
 }
 
 /**
@@ -103,56 +98,6 @@ void listenUntil(char c) {
       Serial.print("Read char(hex): "); Serial.println(c, HEX);//DEBUG
     }//DEBUG
   }
-}
-
-/**
- * Sends a response to the shot position that includes whether or not it was hit
- * as well as the type of shit that was hit in the even that it was sunk.
- * @param	hit	Boolean that is true if there was a hit and false otherwise.
- * @param	type	uint8 containing the type of ship hit if and only if the ship was sunk.
- */
-void sendResponse(bool hit, uint8_t type) {
-  for (int i = 0; i < 3; i++) {
-    uint8_t len = 3;
-    uint8_t buf[len];
-    buf[0] = RSPDATA;
-    buf[1] = hit;
-    buf[2] = type;
-
-    vw_send(buf, len);
-    vw_wait_tx();
-
-    delay(250);
-  }
-}
-
-/**
- * Gets a response to a shot.
- * @param	hit	Pointer to a boolean that will be filled with the hit state.
- * @param	type	Pointer to a ship type, Ship::NONE if no ship sunk, something else if it was sunk.
- */
-void getResponse(bool *hit, Ship::TYPES *type) {
-  Serial.println("Beginning wait for position");//DEBUG
-  
-  uint8_t len = 3;
-  uint8_t buf[len];
-
-  while (1) {
-    vw_wait_rx();
-
-    bool checksum = vw_get_message(buf, &len);
-    int8_t type = (DATATYPE) buf[0];
-
-    if (checksum && type == RSPDATA) break;
-  }
-
-  (*hit) = (bool) buf[1];
-  (*type) = (Ship::TYPES) buf[2];
-  Serial.println("Response received:");//DEBUG
-  Serial.print("Hit: ");//DEBUG
-  Serial.println(*hit);//DEBUG
-  Serial.print("Type: ");//DEBUG
-  Serial.println(getTypeName(*type));//DEBUG
 }
 
 void determinePlayer() {
