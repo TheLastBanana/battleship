@@ -56,6 +56,7 @@ void getPosition(int8_t *x, int8_t *y) {
   while (!newInPos) {}
   *x = inPosPacket[0];
   *y = inPosPacket[1];
+  newInPos = false;
 }
 
 /**
@@ -79,6 +80,7 @@ void getResponse(bool *hit, Ship::TYPES *type) {
   while (!newInResp) {}
   *hit = (bool) inRespPacket[0];
   *type = (Ship::TYPES) inRespPacket[1];
+  newInResp = false;
 }
 
 /**
