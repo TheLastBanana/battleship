@@ -144,32 +144,44 @@ void getResponse(bool *hit, Ship::TYPES *type) {
 }
 
 void determinePlayer() {
-  if (vw_have_message()) {
-    uint8_t len = 1;
-    uint8_t buf[len];
+  //Check 3 times for a message.
+  for (int i = 0; i < 3; i++) {
+    if (vw_have_message()) {
+      uint8_t len = 1;
+      uint8_t buf[len];
 
-    vw_get_message(buf, &len);
-    char temp = (char) buf[0];
+      vw_get_message(buf, &len);
+      char temp = (char) buf[0];
 
-    if (temp == ENQ) {
-      player = PLAYER_2;
-    } else {
-      Serial.print("Connection error! No ENQ found. ");//DEBUG
-      Serial.print("Found ");//DEBUG
-      Serial.print(temp, HEX);//DEBUG
-      Serial.println(" instead.");//DEBUG
-      Serial.print(Serial1.available());//DEBUG
-      Serial.println(" more bytes available.");//DEBUG
-      return;
+      //Data has already been sent; this must be player 2.
+      if (temp == ENQ) {
+	player = PLAYER_2;
+	return;
+      } else {
+	Serial.print("Connection error! No ENQ found. ");//DEBUG
+	Serial.print("Found ");//DEBUG
+	Serial.print(temp, HEX);//DEBUG
+	Serial.println(" instead.");//DEBUG
+	Serial.print(Serial1.available());//DEBUG
+	Serial.println(" more bytes available.");//DEBUG
+      }
     }
-  } else {
-    player = PLAYER_1;
 
-    uint8_t len = 1;
-    uint8_t buf[len];
-    buf[0] = ENQ;
+    delay(250);
+  }
 
+  //No data was receieved, so we're player 1.
+  player = PLAYER_1;
+
+  uint8_t len = 1;
+  uint8_t buf[len];
+  buf[0] = ENQ;
+
+  //Send the message three times.
+  for (int i = 0; i < 3; i++) {
     vw_send(buf, len);
     vw_wait_tx();
+    
+    delay(250);
   }
 }
