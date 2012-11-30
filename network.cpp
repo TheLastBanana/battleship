@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <VirtualWire.h>
+#include <TimerThree.h>
 #include "network.h"
 #include "globals.h"
 
@@ -14,11 +15,15 @@ uint8_t inPosPacket[2];
 
 // Current packet sending info
 DATATYPE currentSendType; //current datatype to be sent
-uint8_t currentAckTurn = 0;
+uint8_t currentAckTurn = 0; //sent with ACK package
+bool acknowledged = false; //determine whether to conintue spamming
 
 // Whether incoming packets have been receieved
 bool newInResp = false;
 bool newInPos = false;
+
+//private functions
+void tick();
 
 /**
  * Initializes the network code.
@@ -141,9 +146,37 @@ void determinePlayer() {
     
     delay(250);
   }
+  
+  Timer3.initialize();
+  Timer3.attachInterrupt(&tick, 50000);
 }
 
 void tick() {
+  //--------------START RX---------------//
+  if(vw_have_message()) {
+    uint8_t inLen = 4;
+    uint8_t inBuf[inLen];
+
+    vw_get_message(inBuf, &inLen);
+
+    if(inBuf[1] == ACK) {
+      acknowledged = true;
+    }
+    else if(inBuf[1] == RSPDATA && !newInResp) {
+      inRespPacket[0] = inBuf[0];
+      inRespPacket[1] = inBuf[2];
+      inRespPacket[2] = inBuf[3];
+      newInResp = true;
+    }
+    else if(inBuf[1] == POSDATA && !newInPos) {
+      inPosPacket[0] = inBuf[0];
+      inPosPacket[1] = inBuf[2];
+      inPosPacket[2] = inBuf[3];
+      newInPos = true;
+    }
+  }
+  //---------------END RX----------------//
+
   //--------------START TX---------------//
   uint8_t outLen;
   if(currentSendType == ACK) {
