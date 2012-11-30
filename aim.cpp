@@ -87,6 +87,8 @@ bool updateAim() {
 
     while (!buttonAPressed()) {}
 
+    Serial.println();
+
     return true;
   }
   return false;

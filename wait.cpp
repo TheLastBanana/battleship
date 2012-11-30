@@ -84,5 +84,7 @@ bool updateWait() {
 
   while (!buttonAPressed()) {}
 
+  Serial.println();
+
   return true;
 }

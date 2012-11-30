@@ -47,25 +47,26 @@ void getPosition(int8_t *x, int8_t *y) {
   uint8_t len = 3;
   uint8_t buf[len];
 
-  for (int i = 0; i < 3; i++) {
+  while (1) {
     vw_wait_rx();
 
     bool checksum = vw_get_message(buf, &len);
     int8_t type = (DATATYPE) buf[0];
 
     if (checksum && type == POSDATA) break;
-
-    if (i == 2) {
-      Serial.println("Failed to recieve position!");
-      return;
-    }
   }
 
   int8_t temp1 = (int8_t) buf[1];
   int8_t temp2 = (int8_t) buf[2];
+
+  Serial.println(
   (*x) = temp1;
   (*y) = temp2;
-  Serial.println("Position received");//DEBUG
+  Serial.println("Position received:");//DEBUG
+  Serial.print("x: ");//DEBUG
+  Serial.println(*x);//DEBUG
+  Serial.print("y: ");//DEBUG
+  Serial.println(*y);//DEBUG
 }
 
 /**
@@ -124,13 +125,13 @@ void getResponse(bool *hit, Ship::TYPES *type) {
   uint8_t len = 3;
   uint8_t buf[len];
 
-  for (int i = 0; i < 3; i++) {
+  while (1) {
     vw_wait_rx();
 
     bool checksum = vw_get_message(buf, &len);
     int8_t type = (DATATYPE) buf[0];
 
-    if (checksum && type == POSDATA) break;
+    if (checksum && type == RSPDATA) break;
 
     if (i == 2) {
       Serial.println("Failed to recieve position!");
@@ -140,7 +141,11 @@ void getResponse(bool *hit, Ship::TYPES *type) {
 
   (*hit) = (bool) buf[1];
   (*type) = (Ship::TYPES) buf[2];
-  Serial.println("Response received");//DEBUG
+  Serial.println("Response received:");//DEBUG
+  Serial.print("Hit: ");//DEBUG
+  Serial.println(*hit);//DEBUG
+  Serial.print("Type: ");//DEBUG
+  Serial.println(getTypeName(*type));//DEBUG
 }
 
 void determinePlayer() {
