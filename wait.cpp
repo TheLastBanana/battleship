@@ -41,10 +41,10 @@ void renderShotMessage(int8_t x, int8_t y, bool hit, Ship::TYPES type) {
   if(type != Ship::NONE)  length = 3;
   else length = 2;
 
-  char xChar = 0x41 + x; //0x41 = 'A'
+  char yChar = 0x41 + y; //0x41 = 'A'
 
   String messages[length];
-  messages[0] = "Enemy shot at " + (String) xChar  + (String) y;
+  messages[0] = "Enemy shot at " + (String) yChar  + (String) (x + 1);
   if(type != Ship::NONE) {    
     messages[1] = "and sunk your";
     messages[2] = getTypeName(type) + '!';
